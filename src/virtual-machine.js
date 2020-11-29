@@ -39,6 +39,8 @@ const CORE_EXTENSIONS = [
     // 'myBlocks'
 ];
 
+let userLogger = require('./user-logging/user-event-log');
+
 /**
  * Handles connections between blocks, stage, and extensions.
  * @constructor
@@ -179,6 +181,8 @@ class VirtualMachine extends EventEmitter {
      * "Green flag" handler - start all threads starting with a green flag.
      */
     greenFlag () {
+        // goessm user action logging
+        userLogger.logEvent('greenFlag', null);
         this.runtime.greenFlag();
     }
 
@@ -209,6 +213,8 @@ class VirtualMachine extends EventEmitter {
      * Stop all threads and running activities.
      */
     stopAll () {
+        // goessm user event logging
+        userLogger.logEvent('stop_all', null);
         this.runtime.stopAll();
     }
 

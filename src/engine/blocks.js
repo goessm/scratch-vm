@@ -94,6 +94,12 @@ class Blocks {
          * @type {boolean}
          */
         this.forceNoGlow = optNoGlow || false;
+
+        /**
+         * goessm
+         * Logger for user event logging
+         */
+        this.eventLogger = require('../user-logging/user-event-log');
     }
 
     /**
@@ -310,6 +316,8 @@ class Blocks {
 
         // UI event: clicked scripts toggle in the runtime.
         if (e.element === 'stackclick') {
+            // goessm event logging
+            this.eventLogger.logEvent('block_stackclick', null);
             this.runtime.toggleScript(e.blockId, {stackClick: true});
             return;
         }
@@ -317,6 +325,8 @@ class Blocks {
         // Block create/update/destroy
         switch (e.type) {
         case 'create': {
+            // goessm event logging
+            this.eventLogger.logEvent('block_create', null);
             const newBlocks = adapter(e);
             // A create event can create many blocks. Add them all.
             for (let i = 0; i < newBlocks.length; i++) {
@@ -325,6 +335,8 @@ class Blocks {
             break;
         }
         case 'change':
+            // goessm event logging
+            this.eventLogger.logEvent('block_change', null);
             this.changeBlock({
                 id: e.blockId,
                 element: e.element,
@@ -333,6 +345,8 @@ class Blocks {
             });
             break;
         case 'move':
+            // goessm event logging
+            this.eventLogger.logEvent('block_move', null);
             this.moveBlock({
                 id: e.blockId,
                 oldParent: e.oldParentId,
@@ -343,9 +357,13 @@ class Blocks {
             });
             break;
         case 'dragOutside':
+            // goessm event logging
+            this.eventLogger.logEvent('block_dragOutside', null);
             this.runtime.emitBlockDragUpdate(e.isOutside);
             break;
         case 'endDrag':
+            // goessm event logging
+            this.eventLogger.logEvent('block_endDrag', null);
             this.runtime.emitBlockDragUpdate(false /* areBlocksOverGui */);
 
             // Drag blocks onto another sprite
@@ -355,6 +373,8 @@ class Blocks {
             }
             break;
         case 'delete':
+            // goessm event logging
+            this.eventLogger.logEvent('block_delete', null);
             // Don't accept delete events for missing blocks,
             // or shadow blocks being obscured.
             if (!this._blocks.hasOwnProperty(e.blockId) ||
@@ -368,6 +388,8 @@ class Blocks {
             this.deleteBlock(e.blockId);
             break;
         case 'var_create':
+            // goessm event logging
+            this.eventLogger.logEvent('var_create', null);
             // Check if the variable being created is global or local
             // If local, create a local var on the current editing target, as long
             // as there are no conflicts, and the current target is actually a sprite
@@ -397,6 +419,8 @@ class Blocks {
             }
             break;
         case 'var_rename':
+            // goessm event logging
+            this.eventLogger.logEvent('var_rename', null);
             if (editingTarget && editingTarget.variables.hasOwnProperty(e.varId)) {
                 // This is a local variable, rename on the current target
                 editingTarget.renameVariable(e.varId, e.newName);
@@ -416,6 +440,8 @@ class Blocks {
             this.emitProjectChanged();
             break;
         case 'var_delete': {
+            // goessm event logging
+            this.eventLogger.logEvent('var_delete', null);
             const target = (editingTarget && editingTarget.variables.hasOwnProperty(e.varId)) ?
                 editingTarget : stage;
             target.deleteVariable(e.varId);
@@ -423,6 +449,8 @@ class Blocks {
             break;
         }
         case 'comment_create':
+            // goessm event logging
+            this.eventLogger.logEvent('comment_create', null);
             if (this.runtime.getEditingTarget()) {
                 const currTarget = this.runtime.getEditingTarget();
                 currTarget.createComment(e.commentId, e.blockId, e.text,
@@ -443,6 +471,8 @@ class Blocks {
             this.emitProjectChanged();
             break;
         case 'comment_change':
+            // goessm event logging
+            this.eventLogger.logEvent('comment_change', null);
             if (this.runtime.getEditingTarget()) {
                 const currTarget = this.runtime.getEditingTarget();
                 if (!currTarget.comments.hasOwnProperty(e.commentId)) {
@@ -465,6 +495,8 @@ class Blocks {
             }
             break;
         case 'comment_move':
+            // goessm event logging
+            this.eventLogger.logEvent('comment_move', null);
             if (this.runtime.getEditingTarget()) {
                 const currTarget = this.runtime.getEditingTarget();
                 if (currTarget && !currTarget.comments.hasOwnProperty(e.commentId)) {
@@ -480,6 +512,8 @@ class Blocks {
             }
             break;
         case 'comment_delete':
+            // goessm event logging
+            this.eventLogger.logEvent('comment_delete', null);
             if (this.runtime.getEditingTarget()) {
                 const currTarget = this.runtime.getEditingTarget();
                 if (!currTarget.comments.hasOwnProperty(e.commentId)) {
