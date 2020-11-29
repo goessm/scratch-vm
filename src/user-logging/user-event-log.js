@@ -17,6 +17,11 @@ const logEvent = function (eventType, eventData) {
     console.log(eventLog);
 };
 
+const getEventLog = function () {
+    return eventLog;
+};
+
 module.exports = {
-    logEvent: logEvent
+    logEvent: logEvent,
+    getEventLog: getEventLog
 };
